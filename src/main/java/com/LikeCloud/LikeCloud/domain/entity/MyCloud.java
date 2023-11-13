@@ -1,6 +1,7 @@
 package com.LikeCloud.LikeCloud.domain.entity;
 
 import com.LikeCloud.LikeCloud.domain.BaseTimeEntity;
+import com.LikeCloud.LikeCloud.domain.type.CloudType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -41,5 +42,5 @@ public class MyCloud extends BaseTimeEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String cloudType;
+    private CloudType cloudType;
 }
