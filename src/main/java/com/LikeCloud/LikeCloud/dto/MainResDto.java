@@ -65,6 +65,7 @@ public class MainResDto {
         private Integer waterDrop;
         private Integer steam;
         private Integer miniCloud;
+        private Integer period;
         private Boolean done;
         private Boolean exception;
 
@@ -76,6 +77,7 @@ public class MainResDto {
                 .waterDrop(shortPlan.getWaterDrop())
                 .steam(shortPlan.getSteam())
                 .miniCloud(shortPlan.getMiniCloud())
+                .period(shortPlan.getPeriod())
                 .done(dailyPlan != null ? dailyPlan.getDone() : null)
                 .exception(dailyPlan != null ? dailyPlan.getException() : null)
                 .build();
