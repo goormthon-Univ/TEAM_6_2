@@ -60,7 +60,7 @@ public class YearPlanServiceImpl implements YearPlanService {
                     .miniCloud(0)
                     .bigCloud(0)
                     .year(yearPlanRequestDto.getYear())
-                    .dailyFix(false)
+                    .dailyFix(true)
                     .done(false)
                     .monthlyPlans(new ArrayList<>())
                     .dailyPlans(new ArrayList<>())

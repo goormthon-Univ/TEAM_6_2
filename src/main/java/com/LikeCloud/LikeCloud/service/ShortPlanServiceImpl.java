@@ -55,7 +55,7 @@ public class ShortPlanServiceImpl implements ShortPlanService {
                     .steam(0)
                     .miniCloud(0)
                     .year(shortPlanRequestDto.getYear())
-                    .dailyFix(false)
+                    .dailyFix(true)
                     .done(false)
                     .dailyPlans(new ArrayList<>())
                     .build();
