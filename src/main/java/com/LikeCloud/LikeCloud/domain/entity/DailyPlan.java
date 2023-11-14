@@ -52,4 +52,7 @@ public class DailyPlan extends BaseTimeEntity {
     @Column(nullable = false)
     private Boolean done;
 
+    public void setYearPlan(YearPlan yearPlan) {
+        this.yearPlan = yearPlan;
+    }
 }

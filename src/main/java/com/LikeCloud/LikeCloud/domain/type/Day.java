@@ -12,7 +12,7 @@ public enum Day {
     THURSDAY(4, "THURSDAY"),
     FRIDAY(5, "FRIDAY"),
     SATURDAY(6, "SATURDAY"),
-    SUNDAY(7, "SUMDAY");
+    SUNDAY(7, "SUNDAY");
 
     private final Integer num;
     private final String day;

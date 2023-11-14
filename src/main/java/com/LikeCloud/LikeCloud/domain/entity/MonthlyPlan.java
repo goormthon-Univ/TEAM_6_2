@@ -43,4 +43,7 @@ public class MonthlyPlan extends BaseTimeEntity {
     @Column(columnDefinition = "MEDIUMTEXT", nullable = false)
     private String plan;
 
+    public void setYearPlan(YearPlan yearPlan) {
+        this.yearPlan = yearPlan;
+    }
 }
