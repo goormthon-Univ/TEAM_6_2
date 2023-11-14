@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum CloudType {
-    STEAM(0, "STEAM"),
     MINICLOUD(1,"MINICLOUD"),
     BIGCLOUD(2,"BIGCLOUD");
 
