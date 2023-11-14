@@ -4,7 +4,7 @@ import com.LikeCloud.LikeCloud.domain.entity.*;
 import com.LikeCloud.LikeCloud.domain.type.Day;
 import com.LikeCloud.LikeCloud.dto.DailyPlanRequestDto;
 import com.LikeCloud.LikeCloud.dto.ShortPlanRequestDto;
-import com.LikeCloud.LikeCloud.repository.DailyPlanReposioty;
+import com.LikeCloud.LikeCloud.repository.DailyPlanRepository;
 import com.LikeCloud.LikeCloud.repository.ShortPlanRepository;
 import com.LikeCloud.LikeCloud.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +28,7 @@ public class ShortPlanServiceImpl implements ShortPlanService {
     UserRepository userRepository;
 
     @Autowired
-    DailyPlanReposioty dailyPlanReposioty;
+    DailyPlanRepository dailyPlanReposioty;
 
     public Day findDay(int day) {
         Day day1 = Arrays.stream(Day.values())
@@ -41,7 +41,7 @@ public class ShortPlanServiceImpl implements ShortPlanService {
     public void save(ShortPlanRequestDto shortPlanRequestDto) {
         try {
             // UserRepository를 이용하여 User 정보를 불러옴
-            User user = userRepository.findById(1)
+            User user = userRepository.findById(1L)
                     .orElseThrow(() -> new RuntimeException("User를 찾을 수 없습니다."));
 
             System.out.println(shortPlanRequestDto.getDailyPlan());

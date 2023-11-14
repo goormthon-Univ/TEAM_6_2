@@ -8,7 +8,7 @@ import com.LikeCloud.LikeCloud.domain.type.Day;
 import com.LikeCloud.LikeCloud.dto.DailyPlanRequestDto;
 import com.LikeCloud.LikeCloud.dto.MonthlyPlanRequestDto;
 import com.LikeCloud.LikeCloud.dto.YearPlanRequestDto;
-import com.LikeCloud.LikeCloud.repository.DailyPlanReposioty;
+import com.LikeCloud.LikeCloud.repository.DailyPlanRepository;
 import com.LikeCloud.LikeCloud.repository.UserRepository;
 import com.LikeCloud.LikeCloud.repository.YearPlanRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +34,7 @@ public class YearPlanServiceImpl implements YearPlanService {
     UserRepository userRepository;
 
     @Autowired
-    DailyPlanReposioty dailyPlanReposioty;
+    DailyPlanRepository dailyPlanReposioty;
 
     public Day findDay(int day) {
         Day day1 = Arrays.stream(Day.values())
@@ -47,7 +47,7 @@ public class YearPlanServiceImpl implements YearPlanService {
     public void save(YearPlanRequestDto yearPlanRequestDto) {
         try {
             // UserRepository를 이용하여 User 정보를 불러옴
-            User user = userRepository.findById(1)
+            User user = userRepository.findById(1L)
                     .orElseThrow(() -> new RuntimeException("User를 찾을 수 없습니다."));
 
             // YearPlan 객체 생성 및 값 설정

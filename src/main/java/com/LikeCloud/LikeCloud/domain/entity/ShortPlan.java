@@ -64,4 +64,10 @@ public class ShortPlan extends BaseTimeEntity {
     public List<DailyPlan> getDailyPlans() {
         return dailyPlans;
     }
+
+    public void updateCloud(Integer[] clouds) {
+        this.waterDrop = clouds[0];
+        this.steam = clouds[1];
+        this.miniCloud = clouds[2];
+    }
 }
