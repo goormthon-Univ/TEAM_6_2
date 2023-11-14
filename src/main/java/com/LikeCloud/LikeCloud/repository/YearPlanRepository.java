@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-@Repository
 public interface YearPlanRepository extends JpaRepository<YearPlan, Long> {
+
     List<YearPlan> findByUserId(Long userId);
 }

@@ -8,7 +8,7 @@ import com.LikeCloud.LikeCloud.domain.type.Day;
 import com.LikeCloud.LikeCloud.dto.DailyPlanRequestDto;
 import com.LikeCloud.LikeCloud.dto.MonthlyPlanRequestDto;
 import com.LikeCloud.LikeCloud.dto.YearPlanRequestDto;
-import com.LikeCloud.LikeCloud.repository.DailyPlanReposioty;
+import com.LikeCloud.LikeCloud.repository.DailyPlanRepository;
 import com.LikeCloud.LikeCloud.repository.UserRepository;
 import com.LikeCloud.LikeCloud.repository.YearPlanRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +34,7 @@ public class YearPlanServiceImpl implements YearPlanService {
     UserRepository userRepository;
 
     @Autowired
-    DailyPlanReposioty dailyPlanReposioty;
+    DailyPlanRepository dailyPlanReposioty;
 
     public Day findDay(int day) {
         Day day1 = Arrays.stream(Day.values())

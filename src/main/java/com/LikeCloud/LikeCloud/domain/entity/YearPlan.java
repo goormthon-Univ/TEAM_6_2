@@ -1,6 +1,7 @@
 package com.LikeCloud.LikeCloud.domain.entity;
 
 import com.LikeCloud.LikeCloud.domain.BaseTimeEntity;
+import javax.persistence.criteria.CriteriaBuilder.In;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -87,5 +88,12 @@ public class YearPlan extends BaseTimeEntity {
 
     public void setDailyPlans(List<DailyPlan> dailyPlans) {
         this.dailyPlans = dailyPlans;
+    }
+
+    public void updateCloud(Integer[] clouds) {
+        this.waterDrop = clouds[0];
+        this.steam = clouds[1];
+        this.miniCloud = clouds[2];
+        this.bigCloud = clouds[3];
     }
 }
