@@ -2,6 +2,7 @@ package com.LikeCloud.LikeCloud.service;
 
 import com.LikeCloud.LikeCloud.domain.entity.User;
 import com.LikeCloud.LikeCloud.dto.DoingPlanResponseDto;
+import com.LikeCloud.LikeCloud.dto.DonePlanResponseDto;
 import com.LikeCloud.LikeCloud.dto.ShortPlanResponseDto;
 import com.LikeCloud.LikeCloud.dto.YearPlanResponseDto;
 import com.LikeCloud.LikeCloud.repository.ShortPlanRepository;
@@ -45,5 +46,25 @@ public class MyPageServiceImpl implements MyPageService {
                 .collect(Collectors.toList());
 
         return new DoingPlanResponseDto(yearPlans, shortPlans);
+    }
+
+    @Override
+    public DonePlanResponseDto getDonePlans(Long userId) {
+        User user = userRepository.findById(1L)
+                .orElseThrow(() -> new RuntimeException("User를 찾을 수 없습니다."));
+
+        List<YearPlanResponseDto> yearPlans = yearPlanRepository.findByUserId(userId)
+                .stream()
+                .filter(yearPlan -> yearPlan.getDone())
+                .map(YearPlanResponseDto::new)
+                .collect(Collectors.toList());
+
+        List<ShortPlanResponseDto> shortPlans = shortPlanRepository.findByUserId(userId)
+                .stream()
+                .filter(shortPlan -> shortPlan.getDone())
+                .map(ShortPlanResponseDto::new)
+                .collect(Collectors.toList());
+
+        return new DonePlanResponseDto(yearPlans, shortPlans);
     }
 }
