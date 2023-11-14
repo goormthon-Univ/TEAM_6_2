@@ -1,5 +1,6 @@
 package com.LikeCloud.LikeCloud.controller;
 
+import com.LikeCloud.LikeCloud.dto.DailyDoneReqDto.CancelDailyDoneReq;
 import com.LikeCloud.LikeCloud.dto.DailyDoneReqDto.DailyDoneReq;
 import com.LikeCloud.LikeCloud.dto.MainResDto;
 import com.LikeCloud.LikeCloud.dto.MainResDto.MainListRes;
@@ -30,6 +31,13 @@ public class MainController {
         mainService.dailyDone(type, exception, dailyDoneReq);
         return ResponseEntity.ok().build();
     }
+
+//    @PostMapping("/DailyDone")
+//    public ResponseEntity<?> cancelDailyDone(@RequestBody CancelDailyDoneReq cancelDailyDoneReq) {
+//        mainService.cancelDailyDone(cancelDailyDoneReq);
+//        return ResponseEntity.ok().build();
+//    }
+
 
 
 }

@@ -23,4 +23,16 @@ public class DailyDoneReqDto {
         }
     }
 
+    @NoArgsConstructor
+    @Getter
+    public static class CancelDailyDoneReq {
+        private Integer year_plan_id;
+        private Integer short_plan_id;
+
+        public CancelDailyDoneReq(Integer year_plan_id, Integer short_plan_id) {
+            this.year_plan_id = year_plan_id;
+            this.short_plan_id = short_plan_id;
+        }
+    }
+
 }

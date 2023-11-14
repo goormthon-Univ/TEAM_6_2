@@ -9,6 +9,7 @@ import com.LikeCloud.LikeCloud.domain.entity.User;
 import com.LikeCloud.LikeCloud.domain.entity.YearPlan;
 import com.LikeCloud.LikeCloud.domain.type.CloudType;
 import com.LikeCloud.LikeCloud.domain.type.Day;
+import com.LikeCloud.LikeCloud.dto.DailyDoneReqDto.CancelDailyDoneReq;
 import com.LikeCloud.LikeCloud.dto.DailyDoneReqDto.DailyDoneReq;
 import com.LikeCloud.LikeCloud.dto.MainResDto;
 import com.LikeCloud.LikeCloud.dto.MainResDto.MainListRes;
@@ -97,7 +98,8 @@ public class MainService {
                     Long.valueOf(dailyDoneReq.getYear_plan_id()))
                 .orElseThrow(() -> new RuntimeException("1년 목표를 찾을 수 없습니다."));
 
-            DailyPlan dailyPlan = dailyPlanRepository.findByYearAndDate(yearPlan.getId(), dayList.get(day-1)).orElse(null);
+            DailyPlan dailyPlan = dailyPlanRepository.findByYearAndDate(yearPlan.getId(), dayList.get(day-1))
+                .orElseThrow(() -> new RuntimeException("오늘 설정한 목표가 없습니다."));
 
             //변경되어야 할 구름 개수들 확인
            cloudNums = checkCloudType(yearPlan.getWaterDrop(), yearPlan.getSteam(), yearPlan.getMiniCloud()
@@ -112,13 +114,20 @@ public class MainService {
                     Long.valueOf(dailyDoneReq.getShort_plan_id()))
                 .orElseThrow(() -> new RuntimeException("단기 목표를 찾을 수 없습니다."));
 
-            DailyPlan dailyPlan = dailyPlanRepository.findByShortAndDate(shortPlan.getId(), dayList.get(day-1)).orElse(null);
+            DailyPlan dailyPlan = dailyPlanRepository.findByShortAndDate(shortPlan.getId(), dayList.get(day-1))
+                .orElseThrow(() -> new RuntimeException("오늘 설정한 목표가 없습니다."));
 
             cloudNums = checkCloudType(shortPlan.getWaterDrop(), shortPlan.getSteam(), shortPlan.getMiniCloud(), 0, type);
 
             shortPlan.updateCloud(cloudNums);
             dailyPlan.updateDone(exception);
             postMyCloud(null, shortPlan, dailyDoneReq.getImage_num(), type);
+        }
+    }
+
+    public void cancelDailyDone(CancelDailyDoneReq cancelDailyDoneReq) {
+        if (cancelDailyDoneReq.getYear_plan_id() != null) {
+
         }
     }
 
@@ -185,5 +194,13 @@ public class MainService {
             .orElseThrow(() -> new RuntimeException("User를 찾을 수 없습니다."));
         return user;
     }
+
+//    public YearPlan findYearPlan(Long yearPlanId) {
+//        YearPlan yearPlan = yearPlanRepository.findById(
+//                Long.valueOf(yearPlanId))
+//            .orElseThrow(() -> new RuntimeException("1년 목표를 찾을 수 없습니다."));
+//
+//        return yearPlan;
+//    }
 
 }
