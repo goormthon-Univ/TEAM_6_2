@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 import static javax.persistence.FetchType.LAZY;
 import static lombok.AccessLevel.PRIVATE;
@@ -31,6 +33,9 @@ public class ShortPlan extends BaseTimeEntity {
     @Column(columnDefinition = "MEDIUMTEXT", nullable = false)
     private String shortPlan;
 
+    @OneToMany(mappedBy = "shortPlan", cascade = CascadeType.ALL)
+    private List<DailyPlan> dailyPlans = new ArrayList<>();
+
     @Column(nullable = false)
     private Integer period;
 
@@ -47,5 +52,16 @@ public class ShortPlan extends BaseTimeEntity {
     private Integer year;
 
     @Column(nullable = false)
+    private Boolean dailyFix;  //0이면 고정 주, 1이면 비고정
+
+    @Column(nullable = false)
     private Boolean done;
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public List<DailyPlan> getDailyPlans() {
+        return dailyPlans;
+    }
 }
