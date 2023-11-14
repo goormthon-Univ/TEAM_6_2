@@ -25,7 +25,7 @@ public class ShortPlanController {
     public ResponseEntity<?> postYearPlan(@RequestBody ShortPlanRequestDto shortPlanRequestDto) {
         try {
             // UserRepository를 사용하여 실제로 존재하는 유저를 조회
-            User user = userRepository.findById(1)
+            User user = userRepository.findById(1L)
                     .orElseThrow(() -> new RuntimeException("해당 아이디의 유저를 찾을 수 없습니다."));
 
             shortPlanService.save(shortPlanRequestDto);

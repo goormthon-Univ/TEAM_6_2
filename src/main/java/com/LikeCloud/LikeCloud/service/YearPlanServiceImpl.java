@@ -47,7 +47,7 @@ public class YearPlanServiceImpl implements YearPlanService {
     public void save(YearPlanRequestDto yearPlanRequestDto) {
         try {
             // UserRepository를 이용하여 User 정보를 불러옴
-            User user = userRepository.findById(1)
+            User user = userRepository.findById(1L)
                     .orElseThrow(() -> new RuntimeException("User를 찾을 수 없습니다."));
 
             // YearPlan 객체 생성 및 값 설정

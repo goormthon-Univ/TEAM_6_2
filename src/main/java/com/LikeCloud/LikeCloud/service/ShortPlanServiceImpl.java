@@ -41,7 +41,7 @@ public class ShortPlanServiceImpl implements ShortPlanService {
     public void save(ShortPlanRequestDto shortPlanRequestDto) {
         try {
             // UserRepository를 이용하여 User 정보를 불러옴
-            User user = userRepository.findById(1)
+            User user = userRepository.findById(1L)
                     .orElseThrow(() -> new RuntimeException("User를 찾을 수 없습니다."));
 
             System.out.println(shortPlanRequestDto.getDailyPlan());

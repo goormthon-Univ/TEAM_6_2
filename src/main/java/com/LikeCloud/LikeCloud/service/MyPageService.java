@@ -5,7 +5,8 @@ import com.LikeCloud.LikeCloud.dto.DoingPlanResponseDto;
 import java.util.List;
 
 public interface MyPageService {
-    DoingPlanResponseDto getPlans(int userId);
+
+    DoingPlanResponseDto getPlans(Long userId);
 }
 
 

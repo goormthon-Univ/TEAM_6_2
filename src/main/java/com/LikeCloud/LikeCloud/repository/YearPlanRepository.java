@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface YearPlanRepository extends JpaRepository<YearPlan, Long> {
-    List<YearPlan> findByUserId(Integer id);
+    List<YearPlan> findByUserId(Long userId);
 }

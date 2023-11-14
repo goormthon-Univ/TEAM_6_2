@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface ShortPlanRepository extends JpaRepository<ShortPlan, String> {
-    List<ShortPlan> findByUserId(Integer id);
+    List<ShortPlan> findByUserId(Long userId);
 }

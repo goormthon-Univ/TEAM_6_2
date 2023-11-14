@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,8 +28,8 @@ public class MyPageServiceImpl implements MyPageService {
     ShortPlanRepository shortPlanRepository;
 
     @Override
-    public DoingPlanResponseDto getPlans(int userId) {
-        User user = userRepository.findById(userId)
+    public DoingPlanResponseDto getPlans(Long userId) {
+        User user = userRepository.findById(1L)
                 .orElseThrow(() -> new RuntimeException("User를 찾을 수 없습니다."));
 
         List<YearPlanResponseDto> yearPlans = yearPlanRepository.findByUserId(userId)
