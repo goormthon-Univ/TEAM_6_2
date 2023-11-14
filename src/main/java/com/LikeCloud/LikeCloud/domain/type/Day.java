@@ -7,12 +7,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum Day {
     MONDAY(1, "MONDAY"),
-    TUSEDAY(2, "TUSEDAY"),
+    TUESDAY(2, "TUESDAY"),
     WEDNESDAY(3, "WEDNESDAY"),
     THURSDAY(4, "THURSDAY"),
     FRIDAY(5, "FRIDAY"),
     SATURDAY(6, "SATURDAY"),
-    SUNDAY(7, "SUMDAY");
+    SUNDAY(7, "SUNDAY");
 
     private final Integer num;
     private final String day;
