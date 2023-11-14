@@ -5,14 +5,18 @@ import com.LikeCloud.LikeCloud.domain.entity.DailyPlan;
 import com.LikeCloud.LikeCloud.domain.entity.MonthlyPlan;
 import com.LikeCloud.LikeCloud.domain.entity.MyCloud;
 import com.LikeCloud.LikeCloud.domain.entity.ShortPlan;
+import com.LikeCloud.LikeCloud.domain.entity.User;
 import com.LikeCloud.LikeCloud.domain.entity.YearPlan;
+import com.LikeCloud.LikeCloud.domain.type.CloudType;
 import com.LikeCloud.LikeCloud.domain.type.Day;
 import com.LikeCloud.LikeCloud.dto.DailyDoneReqDto.DailyDoneReq;
 import com.LikeCloud.LikeCloud.dto.MainResDto;
 import com.LikeCloud.LikeCloud.dto.MainResDto.MainListRes;
 import com.LikeCloud.LikeCloud.repository.DailyPlanRepository;
 import com.LikeCloud.LikeCloud.repository.MonthlyPlanRepository;
+import com.LikeCloud.LikeCloud.repository.MyCloudRepository;
 import com.LikeCloud.LikeCloud.repository.ShortPlanRepository;
+import com.LikeCloud.LikeCloud.repository.UserRepository;
 import com.LikeCloud.LikeCloud.repository.YearPlanRepository;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -35,6 +39,8 @@ public class MainService {
     private final ShortPlanRepository shortPlanRepository;
     private final MonthlyPlanRepository monthlyPlanRepository;
     private final DailyPlanRepository dailyPlanRepository;
+    private final UserRepository userRepository;
+    private final MyCloudRepository myCloudRepository;
 
     //현재 날짜(년, 월, 일)
     LocalDate now = LocalDate.now();
@@ -99,6 +105,7 @@ public class MainService {
 
            yearPlan.updateCloud(cloudNums);
            dailyPlan.updateDone(exception);
+           postMyCloud(yearPlan, null, dailyDoneReq.getImage_num(), type);
 
         } else if (dailyDoneReq.getShort_plan_id() != null) {
             ShortPlan shortPlan = shortPlanRepository.findById(
@@ -111,8 +118,8 @@ public class MainService {
 
             shortPlan.updateCloud(cloudNums);
             dailyPlan.updateDone(exception);
+            postMyCloud(null, shortPlan, dailyDoneReq.getImage_num(), type);
         }
-
     }
 
     /**
@@ -144,5 +151,39 @@ public class MainService {
         return cloudNum;
     }
 
+    /**
+     * 미니구름, 구름 생성 시 구름 히스토리 내역 저장
+     * @param yearPlan
+     * @param shortPlan
+     * @param cloudImage
+     * @param type
+     */
+    @Transactional
+    public void postMyCloud(YearPlan yearPlan, ShortPlan shortPlan, Integer cloudImage, Integer type) {
+        if (type == 2 || type == 3) {
+            MyCloud myCloud = MyCloud.builder()
+                .user(findUser())
+                .yearPlan(yearPlan)
+                .shortPlan(shortPlan)
+                .cloudImage(cloudImage)
+                .cloudType(findCloudType(type))
+                .build();
+
+            myCloudRepository.save(myCloud);
+        }
+    }
+
+    public CloudType findCloudType(Integer type) {
+        CloudType cloudType = Arrays.stream(CloudType.values())
+            .filter(c -> c.getNum() == type)
+            .findAny().get();
+        return cloudType;
+    }
+
+    public User findUser() {
+        User user = userRepository.findById(1L)
+            .orElseThrow(() -> new RuntimeException("User를 찾을 수 없습니다."));
+        return user;
+    }
 
 }
