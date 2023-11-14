@@ -1,6 +1,8 @@
 package com.LikeCloud.LikeCloud.service;
 
+import com.LikeCloud.LikeCloud.domain.entity.ShortPlan;
 import com.LikeCloud.LikeCloud.domain.entity.User;
+import com.LikeCloud.LikeCloud.domain.entity.YearPlan;
 import com.LikeCloud.LikeCloud.dto.DoingPlanResponseDto;
 import com.LikeCloud.LikeCloud.dto.DonePlanResponseDto;
 import com.LikeCloud.LikeCloud.dto.ShortPlanResponseDto;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -46,6 +49,27 @@ public class MyPageServiceImpl implements MyPageService {
                 .collect(Collectors.toList());
 
         return new DoingPlanResponseDto(yearPlans, shortPlans);
+    }
+
+    @Override
+    public void deletePlan(Long planId) {
+        // 삭제할 목표가 YearPlan인지 ShortPlan인지 확인
+        Optional<YearPlan> yearPlanOptional = yearPlanRepository.findById(planId);
+        if (yearPlanOptional.isPresent()) {
+            // YearPlan 삭제
+            yearPlanRepository.deleteById(planId);
+            return;
+        }
+
+        Optional<ShortPlan> shortPlanOptional = shortPlanRepository.findById(planId);
+        if (shortPlanOptional.isPresent()) {
+            // ShortPlan 삭제
+            shortPlanRepository.deleteById(planId);
+            return;
+        }
+
+        // 해당 ID에 대한 목표가 존재하지 않는 경우 예외 처리
+        throw new RuntimeException("해당 ID에 대한 목표를 찾을 수 없습니다.");
     }
 
     @Override

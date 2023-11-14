@@ -9,7 +9,5 @@ public interface MyPageService {
 
     DoingPlanResponseDto getPlans(Long userId);
     DonePlanResponseDto getDonePlans(Long userId);
+    void deletePlan(Long planId);
 }
-
-
-
