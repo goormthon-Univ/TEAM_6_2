@@ -5,6 +5,7 @@ import com.LikeCloud.LikeCloud.domain.entity.MonthlyPlan;
 import com.LikeCloud.LikeCloud.domain.entity.ShortPlan;
 import com.LikeCloud.LikeCloud.domain.entity.YearPlan;
 import java.util.List;
+import javax.swing.ImageIcon;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -81,6 +82,15 @@ public class MainResDto {
                 .done(dailyPlan != null ? dailyPlan.getDone() : null)
                 .exception(dailyPlan != null ? dailyPlan.getException() : null)
                 .build();
+        }
+    }
+
+    @Getter
+    public static class waterDropRes {
+        private Integer waterDrop;
+
+        public waterDropRes(Integer waterDrop) {
+            this.waterDrop = waterDrop;
         }
     }
 

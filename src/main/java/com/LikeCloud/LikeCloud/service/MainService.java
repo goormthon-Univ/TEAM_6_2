@@ -9,9 +9,11 @@ import com.LikeCloud.LikeCloud.domain.entity.User;
 import com.LikeCloud.LikeCloud.domain.entity.YearPlan;
 import com.LikeCloud.LikeCloud.domain.type.CloudType;
 import com.LikeCloud.LikeCloud.domain.type.Day;
+import com.LikeCloud.LikeCloud.dto.DailyDoneReqDto.CancelDailyDoneReq;
 import com.LikeCloud.LikeCloud.dto.DailyDoneReqDto.DailyDoneReq;
 import com.LikeCloud.LikeCloud.dto.MainResDto;
 import com.LikeCloud.LikeCloud.dto.MainResDto.MainListRes;
+import com.LikeCloud.LikeCloud.dto.MainResDto.waterDropRes;
 import com.LikeCloud.LikeCloud.repository.DailyPlanRepository;
 import com.LikeCloud.LikeCloud.repository.MonthlyPlanRepository;
 import com.LikeCloud.LikeCloud.repository.MyCloudRepository;
@@ -93,11 +95,15 @@ public class MainService {
     public void dailyDone(Integer type, Integer exception, DailyDoneReq dailyDoneReq) {
         Integer[] cloudNums;
         if (dailyDoneReq.getYear_plan_id() != null) {
-            YearPlan yearPlan = yearPlanRepository.findById(
-                    Long.valueOf(dailyDoneReq.getYear_plan_id()))
-                .orElseThrow(() -> new RuntimeException("1년 목표를 찾을 수 없습니다."));
+            YearPlan yearPlan = findYearPlan(Long.valueOf(dailyDoneReq.getYear_plan_id()));
 
-            DailyPlan dailyPlan = dailyPlanRepository.findByYearAndDate(yearPlan.getId(), dayList.get(day-1)).orElse(null);
+            DailyPlan dailyPlan = dailyPlanRepository.findByYearAndDate(yearPlan.getId(), dayList.get(day-1))
+                .orElseThrow(() -> new RuntimeException("오늘 설정한 목표가 없습니다."));
+
+            if (yearPlan.getMiniCloud() == 13 || yearPlan.getBigCloud() == 1) {
+                yearPlan.updateDone();
+                throw new RuntimeException("이미 달성한 목표입니다.");
+            }
 
             //변경되어야 할 구름 개수들 확인
            cloudNums = checkCloudType(yearPlan.getWaterDrop(), yearPlan.getSteam(), yearPlan.getMiniCloud()
@@ -108,11 +114,15 @@ public class MainService {
            postMyCloud(yearPlan, null, dailyDoneReq.getImage_num(), type);
 
         } else if (dailyDoneReq.getShort_plan_id() != null) {
-            ShortPlan shortPlan = shortPlanRepository.findById(
-                    Long.valueOf(dailyDoneReq.getShort_plan_id()))
-                .orElseThrow(() -> new RuntimeException("단기 목표를 찾을 수 없습니다."));
+            ShortPlan shortPlan = findShortPlan(Long.valueOf(dailyDoneReq.getShort_plan_id()));
 
-            DailyPlan dailyPlan = dailyPlanRepository.findByShortAndDate(shortPlan.getId(), dayList.get(day-1)).orElse(null);
+            DailyPlan dailyPlan = dailyPlanRepository.findByShortAndDate(shortPlan.getId(), dayList.get(day-1))
+                .orElseThrow(() -> new RuntimeException("오늘 설정한 목표가 없습니다."));
+
+            if (shortPlan.getMiniCloud() == shortPlan.getPeriod() ) {
+                shortPlan.updateDone();
+                throw new RuntimeException("이미 달성한 목표입니다.");
+            }
 
             cloudNums = checkCloudType(shortPlan.getWaterDrop(), shortPlan.getSteam(), shortPlan.getMiniCloud(), 0, type);
 
@@ -120,6 +130,33 @@ public class MainService {
             dailyPlan.updateDone(exception);
             postMyCloud(null, shortPlan, dailyDoneReq.getImage_num(), type);
         }
+    }
+
+    @Transactional
+    public MainResDto.waterDropRes cancelDailyDone(CancelDailyDoneReq cancelDailyDoneReq, Integer exception) {
+        if (cancelDailyDoneReq.getYear_plan_id() != null) {
+            YearPlan yearPlan = findYearPlan(Long.valueOf(cancelDailyDoneReq.getYear_plan_id()));
+            if (yearPlan.getSteam() != 0 || yearPlan.getMiniCloud() != 0 || yearPlan.getBigCloud() != 0) {
+                throw new RuntimeException("수증기 또는 구름이 생겼을 때는 목표 취소가 불가합니다");
+            }
+            yearPlanRepository.updateWaterDrop(yearPlan.getId());
+            DailyPlan dailyPlan = yearPlan.getDailyPlans().stream()
+                .filter(a -> a.getDay() == dayList.get(day-1) && a.getYearPlan() == yearPlan).findAny().get();
+            dailyPlan.updateException(exception);
+            return new MainResDto.waterDropRes(yearPlan.getWaterDrop()-1);
+
+        } else if(cancelDailyDoneReq.getShort_plan_id() != null) {
+            ShortPlan shortPlan = findShortPlan(Long.valueOf(cancelDailyDoneReq.getShort_plan_id()));
+            if (shortPlan.getSteam() != 0 || shortPlan.getMiniCloud() != 0) {
+                throw new RuntimeException("수증기 또는 구름이 생겼을 때는 목표 취소가 불가합니다");
+            }
+            shortPlanRepository.updateWaterDrop(shortPlan.getId());
+            DailyPlan dailyPlan = shortPlan.getDailyPlans().stream()
+                .filter(a -> a.getDay() == dayList.get(day-1) && a.getShortPlan() == shortPlan).findAny().get();
+            dailyPlan.updateException(exception);
+            return new MainResDto.waterDropRes(shortPlan.getWaterDrop()-1);
+        }
+        return null;
     }
 
     /**
@@ -177,6 +214,7 @@ public class MainService {
         CloudType cloudType = Arrays.stream(CloudType.values())
             .filter(c -> c.getNum() == type)
             .findAny().get();
+        System.out.println(cloudType);
         return cloudType;
     }
 
@@ -184,6 +222,22 @@ public class MainService {
         User user = userRepository.findById(1L)
             .orElseThrow(() -> new RuntimeException("User를 찾을 수 없습니다."));
         return user;
+    }
+
+    public YearPlan findYearPlan(Long yearPlanId) {
+        YearPlan yearPlan = yearPlanRepository.findById(
+                Long.valueOf(yearPlanId))
+            .orElseThrow(() -> new RuntimeException("1년 목표를 찾을 수 없습니다."));
+
+        return yearPlan;
+    }
+
+    public ShortPlan findShortPlan(Long shortPlanId) {
+        ShortPlan shortPlan = shortPlanRepository.findById(
+            Long.valueOf(shortPlanId))
+            .orElseThrow(() -> new RuntimeException("단기 목표를 찾을 수 없습니다."));
+
+        return shortPlan;
     }
 
 }
