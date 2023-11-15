@@ -1,12 +1,11 @@
 package com.LikeCloud.LikeCloud.service;
 
+import com.LikeCloud.LikeCloud.domain.entity.DailyPlan;
 import com.LikeCloud.LikeCloud.domain.entity.ShortPlan;
 import com.LikeCloud.LikeCloud.domain.entity.User;
 import com.LikeCloud.LikeCloud.domain.entity.YearPlan;
-import com.LikeCloud.LikeCloud.dto.DoingPlanResponseDto;
-import com.LikeCloud.LikeCloud.dto.DonePlanResponseDto;
-import com.LikeCloud.LikeCloud.dto.ShortPlanResponseDto;
-import com.LikeCloud.LikeCloud.dto.YearPlanResponseDto;
+import com.LikeCloud.LikeCloud.dto.*;
+import com.LikeCloud.LikeCloud.repository.DailyPlanRepository;
 import com.LikeCloud.LikeCloud.repository.ShortPlanRepository;
 import com.LikeCloud.LikeCloud.repository.UserRepository;
 import com.LikeCloud.LikeCloud.repository.YearPlanRepository;
@@ -14,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -30,6 +30,9 @@ public class MyPageServiceImpl implements MyPageService {
 
     @Autowired
     ShortPlanRepository shortPlanRepository;
+
+    @Autowired
+    DailyPlanRepository dailyPlanRepository;
 
     @Override
     public DoingPlanResponseDto getPlans(Long userId) {
@@ -90,5 +93,31 @@ public class MyPageServiceImpl implements MyPageService {
                 .collect(Collectors.toList());
 
         return new DonePlanResponseDto(yearPlans, shortPlans);
+    }
+
+    @Override
+    public List<DailyPlanResponseDto> getDailyPlansByPlanId(Long userId, Long planId) {
+        // YearPlan 또는 ShortPlan 찾기
+        YearPlan yearPlan = yearPlanRepository.findById(planId).orElse(null);
+        ShortPlan shortPlan = shortPlanRepository.findById(planId).orElse(null);
+
+        if (yearPlan == null && shortPlan == null) {
+            throw new RuntimeException("해당 ID에 대한 목표를 찾을 수 없습니다.");
+        }
+
+        // DailyPlans 조회
+        List<DailyPlan> dailyPlans;
+        if (yearPlan != null) {
+            // YearPlan의 경우
+            dailyPlans = dailyPlanRepository.findByYearPlanId(planId);
+        } else {
+            // ShortPlan의 경우
+            dailyPlans = dailyPlanRepository.findByShortPlanId(planId);
+        }
+
+        // DailyPlan을 DTO로 변환
+        return dailyPlans.stream()
+                .map(dailyPlan -> new DailyPlanResponseDto(dailyPlan.getDay(), dailyPlan.getPlan()))
+                .collect(Collectors.toList());
     }
 }

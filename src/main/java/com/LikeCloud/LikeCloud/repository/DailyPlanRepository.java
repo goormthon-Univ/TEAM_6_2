@@ -1,9 +1,6 @@
 package com.LikeCloud.LikeCloud.repository;
 
 import com.LikeCloud.LikeCloud.domain.entity.DailyPlan;
-import com.LikeCloud.LikeCloud.domain.entity.MonthlyPlan;
-import com.LikeCloud.LikeCloud.domain.entity.ShortPlan;
-import com.LikeCloud.LikeCloud.domain.type.CloudType;
 import com.LikeCloud.LikeCloud.domain.type.Day;
 import java.util.List;
 import java.util.Optional;
@@ -25,4 +22,8 @@ public interface DailyPlanRepository extends JpaRepository<DailyPlan, Long> {
     @Query("select d from DailyPlan d " +
         "where d.yearPlan.id in :yearPlanIds and d.day = :day")
     List<DailyPlan> findByYearsAndDate(@Param("yearPlanIds") List<Long> yearPlanIds, @Param("day") Day day);
+
+    List<DailyPlan> findByYearPlanId(Long planId);
+
+    List<DailyPlan> findByShortPlanId(Long planId);
 }

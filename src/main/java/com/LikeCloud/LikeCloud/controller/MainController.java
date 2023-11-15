@@ -38,6 +38,4 @@ public class MainController {
         return ResponseEntity.ok(mainService.cancelDailyDone(cancelDailyDoneReq, exception));
     }
 
-
-
 }

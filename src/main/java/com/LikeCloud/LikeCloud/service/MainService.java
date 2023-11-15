@@ -100,6 +100,11 @@ public class MainService {
             DailyPlan dailyPlan = dailyPlanRepository.findByYearAndDate(yearPlan.getId(), dayList.get(day-1))
                 .orElseThrow(() -> new RuntimeException("오늘 설정한 목표가 없습니다."));
 
+            if (yearPlan.getMiniCloud() == 13 || yearPlan.getBigCloud() == 1) {
+                yearPlan.updateDone();
+                throw new RuntimeException("이미 달성한 목표입니다.");
+            }
+
             //변경되어야 할 구름 개수들 확인
            cloudNums = checkCloudType(yearPlan.getWaterDrop(), yearPlan.getSteam(), yearPlan.getMiniCloud()
            , yearPlan.getBigCloud(), type);
@@ -113,6 +118,11 @@ public class MainService {
 
             DailyPlan dailyPlan = dailyPlanRepository.findByShortAndDate(shortPlan.getId(), dayList.get(day-1))
                 .orElseThrow(() -> new RuntimeException("오늘 설정한 목표가 없습니다."));
+
+            if (shortPlan.getMiniCloud() == shortPlan.getPeriod() ) {
+                shortPlan.updateDone();
+                throw new RuntimeException("이미 달성한 목표입니다.");
+            }
 
             cloudNums = checkCloudType(shortPlan.getWaterDrop(), shortPlan.getSteam(), shortPlan.getMiniCloud(), 0, type);
 
@@ -204,6 +214,7 @@ public class MainService {
         CloudType cloudType = Arrays.stream(CloudType.values())
             .filter(c -> c.getNum() == type)
             .findAny().get();
+        System.out.println(cloudType);
         return cloudType;
     }
 
@@ -228,5 +239,4 @@ public class MainService {
 
         return shortPlan;
     }
-
 }

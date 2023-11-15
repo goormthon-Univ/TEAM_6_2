@@ -70,4 +70,8 @@ public class ShortPlan extends BaseTimeEntity {
         this.steam = clouds[1];
         this.miniCloud = clouds[2];
     }
+
+    public void updateDone() {
+        this.done = true;
+    }
 }
