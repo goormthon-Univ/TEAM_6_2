@@ -239,5 +239,4 @@ public class MainService {
 
         return shortPlan;
     }
-
 }
