@@ -5,6 +5,7 @@ import com.LikeCloud.LikeCloud.domain.entity.MonthlyPlan;
 import com.LikeCloud.LikeCloud.domain.entity.ShortPlan;
 import com.LikeCloud.LikeCloud.domain.entity.YearPlan;
 import java.util.List;
+import javax.swing.ImageIcon;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -65,6 +66,7 @@ public class MainResDto {
         private Integer waterDrop;
         private Integer steam;
         private Integer miniCloud;
+        private Integer period;
         private Boolean done;
         private Boolean exception;
 
@@ -76,9 +78,19 @@ public class MainResDto {
                 .waterDrop(shortPlan.getWaterDrop())
                 .steam(shortPlan.getSteam())
                 .miniCloud(shortPlan.getMiniCloud())
+                .period(shortPlan.getPeriod())
                 .done(dailyPlan != null ? dailyPlan.getDone() : null)
                 .exception(dailyPlan != null ? dailyPlan.getException() : null)
                 .build();
+        }
+    }
+
+    @Getter
+    public static class waterDropRes {
+        private Integer waterDrop;
+
+        public waterDropRes(Integer waterDrop) {
+            this.waterDrop = waterDrop;
         }
     }
 
