@@ -65,4 +65,12 @@ public class DailyPlan extends BaseTimeEntity {
             this.done = false;
         }
     }
+
+    public void updateException(Integer exception) {
+        if (exception == 0) {
+            this.done = false;
+        } else if(exception == 1) {
+            this.exception = false;
+        }
+    }
 }
