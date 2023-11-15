@@ -8,8 +8,10 @@ import com.LikeCloud.LikeCloud.domain.type.Day;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface DailyPlanRepository extends JpaRepository<DailyPlan, Long> {
     @Query("select d from DailyPlan d " +
