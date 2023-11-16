@@ -11,6 +11,7 @@ import javax.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.LikeCloud.LikeCloud.domain.entity.MonthlyPlan;
 
 import static javax.persistence.FetchType.LAZY;
 import static lombok.AccessLevel.PRIVATE;
