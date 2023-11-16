@@ -132,6 +132,13 @@ public class MainService {
         }
     }
 
+    /**
+     * 오늘 달성한 목표 취소
+     * 상태값 및 waterDrop 개수 update
+     * @param cancelDailyDoneReq
+     * @param exception
+     * @return
+     */
     @Transactional
     public MainResDto.waterDropRes cancelDailyDone(CancelDailyDoneReq cancelDailyDoneReq, Integer exception) {
         if (cancelDailyDoneReq.getYear_plan_id() != null) {
@@ -214,7 +221,6 @@ public class MainService {
         CloudType cloudType = Arrays.stream(CloudType.values())
             .filter(c -> c.getNum() == type)
             .findAny().get();
-        System.out.println(cloudType);
         return cloudType;
     }
 
