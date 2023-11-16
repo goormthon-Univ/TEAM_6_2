@@ -28,6 +28,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import javax.persistence.criteria.CriteriaBuilder.In;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -164,6 +165,12 @@ public class MainService {
             return new MainResDto.waterDropRes(shortPlan.getWaterDrop()-1);
         }
         return null;
+    }
+
+    @Transactional
+    @Scheduled(cron = "0 44 0 * * *", zone = "Asia/Seoul")
+    public void updateDailyDone() {
+        dailyPlanRepository.updateDoneStatus();
     }
 
     /**
