@@ -25,4 +25,5 @@ public interface DailyPlanRepository extends JpaRepository<DailyPlan, Long> {
     @Query("select d from DailyPlan d " +
         "where d.yearPlan.id in :yearPlanIds and d.day = :day")
     List<DailyPlan> findByYearsAndDate(@Param("yearPlanIds") List<Long> yearPlanIds, @Param("day") Day day);
+
 }
