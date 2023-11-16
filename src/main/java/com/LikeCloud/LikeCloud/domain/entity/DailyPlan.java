@@ -2,10 +2,7 @@ package com.LikeCloud.LikeCloud.domain.entity;
 
 import com.LikeCloud.LikeCloud.domain.BaseTimeEntity;
 import com.LikeCloud.LikeCloud.domain.type.Day;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import static javax.persistence.EnumType.STRING;
 import static javax.persistence.FetchType.LAZY;
@@ -16,6 +13,7 @@ import static lombok.AccessLevel.PROTECTED;
 import javax.persistence.*;
 
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor(access = PROTECTED)
 @AllArgsConstructor(access = PRIVATE)

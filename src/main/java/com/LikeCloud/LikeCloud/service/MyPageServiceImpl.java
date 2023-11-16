@@ -4,6 +4,7 @@ import com.LikeCloud.LikeCloud.domain.entity.DailyPlan;
 import com.LikeCloud.LikeCloud.domain.entity.ShortPlan;
 import com.LikeCloud.LikeCloud.domain.entity.User;
 import com.LikeCloud.LikeCloud.domain.entity.YearPlan;
+import com.LikeCloud.LikeCloud.domain.type.Day;
 import com.LikeCloud.LikeCloud.dto.*;
 import com.LikeCloud.LikeCloud.repository.DailyPlanRepository;
 import com.LikeCloud.LikeCloud.repository.ShortPlanRepository;
@@ -13,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -119,5 +120,34 @@ public class MyPageServiceImpl implements MyPageService {
         return dailyPlans.stream()
                 .map(dailyPlan -> new DailyPlanResponseDto(dailyPlan.getDay(), dailyPlan.getPlan()))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void updateDailyPlansByPlanId(Long userId, Long planId, String planType, UpdateDailyPlanRequestDto updateDailyPlanRequestDto) {
+        User user = userRepository.findById(1L)
+                .orElseThrow(() -> new RuntimeException("User를 찾을 수 없습니다."));
+
+        if (planType.equals("yearPlan")) {
+            dailyPlanRepository.deleteByYearPlanId(planId);
+            List<DailyPlan> dailyPlans = updateDailyPlanRequestDto.getDailyPlans().stream()
+                    .map(dp -> dp.toEntity(user, yearPlanRepository.findById(planId).get(), null, findDay(dp.getDay()), dp.getPlan()))
+                    .collect(Collectors.toList());
+            dailyPlanRepository.saveAll(dailyPlans);
+        } else if (planType.equals("shortPlan")) {
+            dailyPlanRepository.deleteByShortPlanId(planId);
+            List<DailyPlan> dailyPlans = updateDailyPlanRequestDto.getDailyPlans().stream()
+                    .map(dp -> dp.toEntity(user, null, shortPlanRepository.findById(planId).get(), findDay(dp.getDay()), dp.getPlan()))
+                    .collect(Collectors.toList());
+            dailyPlanRepository.saveAll(dailyPlans);
+        } else {
+            throw new RuntimeException("해당 ID에 대한 목표를 찾을 수 없습니다.");
+        }
+    }
+
+    public Day findDay(Integer day) {
+        Day day1 = Arrays.stream(Day.values())
+                .filter(c -> c.getNum() == day)
+                .findAny().get();
+        return day1;
     }
 }
