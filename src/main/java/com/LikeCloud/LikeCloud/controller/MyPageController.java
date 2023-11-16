@@ -1,6 +1,8 @@
 package com.LikeCloud.LikeCloud.controller;
 
+import com.LikeCloud.LikeCloud.domain.entity.DailyPlan;
 import com.LikeCloud.LikeCloud.domain.entity.User;
+import com.LikeCloud.LikeCloud.dto.DailyPlanResponseDto;
 import com.LikeCloud.LikeCloud.dto.DeletePlanRequestDto;
 import com.LikeCloud.LikeCloud.dto.DoingPlanResponseDto;
 import com.LikeCloud.LikeCloud.dto.DonePlanResponseDto;
@@ -10,10 +12,11 @@ import lombok.RequiredArgsConstructor;
 import org.hibernate.sql.Delete;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -69,6 +72,24 @@ public class MyPageController {
 
             DonePlanResponseDto donePlanResponseDto = myPageService.getDonePlans(user.getId());
             return ResponseEntity.ok(donePlanResponseDto);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("내부 서버 오류: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/DailyPlan/{planType}/{planId}")
+    public ResponseEntity<?> getDailyPlan(@PathVariable String planType, @PathVariable Long planId) {
+        try {
+            User user = userRepository.findById(1L)
+                    .orElseThrow(() -> new RuntimeException("해당 아이디의 유저를 찾을 수 없습니다."));
+
+            List<DailyPlanResponseDto> dailyPlans = myPageService.getDailyPlansByPlanId(user.getId(), planId);
+
+            // 결과를 객체로 한 번 더 감싸서 반환
+            Map<String, List<DailyPlanResponseDto>> response = new HashMap<>();
+            response.put("dailyPlans", dailyPlans);
+
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("내부 서버 오류: " + e.getMessage());
         }
