@@ -168,7 +168,7 @@ public class MainService {
     }
 
     @Transactional
-    @Scheduled(cron = "0 44 0 * * *", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")
     public void updateDailyDone() {
         dailyPlanRepository.updateDoneStatus();
     }
