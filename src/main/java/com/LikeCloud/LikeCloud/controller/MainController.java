@@ -23,19 +23,18 @@ public class MainController {
 
     private final MainService mainService;
     @GetMapping
-    public ResponseEntity<MainResDto.MainListRes> getPlanList() {
-        return ResponseEntity.ok(mainService.getPlanList());
+    public ResponseEntity<MainResDto.MainListRes> getPlanList(@RequestHeader("userId") Integer userId) {
+        return ResponseEntity.ok(mainService.getPlanList(userId));
     }
 
     @PostMapping("/DailyDone")
-    public ResponseEntity<?> dailyDone(@RequestParam("type") Integer type, @RequestParam("exception") Integer exception, @RequestHeader("userId") Long userId, @RequestBody DailyDoneReq dailyDoneReq) {
-        System.out.println(userId);
-        mainService.dailyDone(type, exception, dailyDoneReq);
+    public ResponseEntity<?> dailyDone(@RequestHeader("userId") Integer userId, @RequestParam("type") Integer type, @RequestParam("exception") Integer exception, @RequestBody DailyDoneReq dailyDoneReq) {
+        mainService.dailyDone(userId, type, exception, dailyDoneReq);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/DailyDone")
-    public ResponseEntity<MainResDto.waterDropRes> cancelDailyDone(@RequestParam("exception") Integer exception, @RequestBody CancelDailyDoneReq cancelDailyDoneReq) {
+    public ResponseEntity<MainResDto.waterDropRes> cancelDailyDone(@RequestHeader("userId") Integer userId, @RequestParam("exception") Integer exception, @RequestBody CancelDailyDoneReq cancelDailyDoneReq) {
         return ResponseEntity.ok(mainService.cancelDailyDone(cancelDailyDoneReq, exception));
     }
 
