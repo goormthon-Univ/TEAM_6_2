@@ -58,11 +58,12 @@ public class MainService {
      * 현재 년, 월, 일 및 userID에 해당하는 목표(1년, 단기)들을 반환.
      * @return 목표들(1년, 단기목표)
      */
-    public MainListRes getPlanList() {
+    public MainListRes getPlanList(Integer userId) {
+        User user = findUser(userId);
 
         //1년 목표, 단기목표 조회
-        List<YearPlan> yearPlanList = yearPlanRepository.findByUserId(1L);
-        List<ShortPlan> shortPlanList = shortPlanRepository.findByUserId(1L);
+        List<YearPlan> yearPlanList = yearPlanRepository.findByUserId(user.getId());
+        List<ShortPlan> shortPlanList = shortPlanRepository.findByUserId(user.getId());
 
         List<Long> yearPlanIds = yearPlanList.stream().map(YearPlan::getId).collect(Collectors.toList());
 
@@ -93,7 +94,7 @@ public class MainService {
      * @param type
      */
     @Transactional
-    public void dailyDone(Integer type, Integer exception, DailyDoneReq dailyDoneReq) {
+    public void dailyDone(Integer userId, Integer type, Integer exception, DailyDoneReq dailyDoneReq) {
         Integer[] cloudNums;
         if (dailyDoneReq.getYear_plan_id() != null) {
             YearPlan yearPlan = findYearPlan(Long.valueOf(dailyDoneReq.getYear_plan_id()));
@@ -112,7 +113,7 @@ public class MainService {
 
            yearPlan.updateCloud(cloudNums);
            dailyPlan.updateDone(exception);
-           postMyCloud(yearPlan, null, dailyDoneReq.getImage_num(), type);
+           postMyCloud(userId, yearPlan, null, dailyDoneReq.getImage_num(), type);
 
         } else if (dailyDoneReq.getShort_plan_id() != null) {
             ShortPlan shortPlan = findShortPlan(Long.valueOf(dailyDoneReq.getShort_plan_id()));
@@ -129,7 +130,7 @@ public class MainService {
 
             shortPlan.updateCloud(cloudNums);
             dailyPlan.updateDone(exception);
-            postMyCloud(null, shortPlan, dailyDoneReq.getImage_num(), type);
+            postMyCloud(userId, null, shortPlan, dailyDoneReq.getImage_num(), type);
         }
     }
 
@@ -210,10 +211,10 @@ public class MainService {
      * @param type
      */
     @Transactional
-    public void postMyCloud(YearPlan yearPlan, ShortPlan shortPlan, Integer cloudImage, Integer type) {
+    public void postMyCloud(Integer userId, YearPlan yearPlan, ShortPlan shortPlan, Integer cloudImage, Integer type) {
         if (type == 2 || type == 3) {
             MyCloud myCloud = MyCloud.builder()
-                .user(findUser())
+                .user(findUser(userId))
                 .yearPlan(yearPlan)
                 .shortPlan(shortPlan)
                 .cloudImage(cloudImage)
@@ -231,8 +232,9 @@ public class MainService {
         return cloudType;
     }
 
-    public User findUser() {
-        User user = userRepository.findById(1L)
+    public User findUser(Integer userId) {
+        Long user_id = Long.valueOf(userId);
+        User user = userRepository.findById(user_id)
             .orElseThrow(() -> new RuntimeException("User를 찾을 수 없습니다."));
         return user;
     }

@@ -22,8 +22,8 @@ public class CollectionService {
     private final UserRepository userRepository;
     private final MyCloudRepository myCloudRepository;
 
-    public CollectionResDto.CollectionListRes getCollection(Integer type) {
-        User user = findUser();
+    public CollectionResDto.CollectionListRes getCollection(Integer userId, Integer type) {
+        User user = findUser(userId);
         CloudType cloudType = findCloudType(type);
         List<MyCloud> myCloudList = myCloudRepository.findByUserIdAndCloudType(user.getId(), cloudType);
 
@@ -31,8 +31,9 @@ public class CollectionService {
 
     }
 
-    public User findUser() {
-        User user = userRepository.findById(1L)
+    public User findUser(Integer userId) {
+        Long user_id = Long.valueOf(userId);
+        User user = userRepository.findById(user_id)
             .orElseThrow(() -> new RuntimeException("User를 찾을 수 없습니다."));
         return user;
     }
