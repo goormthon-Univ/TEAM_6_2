@@ -5,7 +5,9 @@ import com.LikeCloud.LikeCloud.dto.SignUpRequestDto;
 import com.LikeCloud.LikeCloud.dto.UserLoginRequestDto;
 import com.LikeCloud.LikeCloud.dto.UserLoginResponseDto;
 //import com.LikeCloud.LikeCloud.dto.UserNickNameResponseDto;
+import com.LikeCloud.LikeCloud.dto.UserNickNameResponseDto;
 import com.LikeCloud.LikeCloud.repository.UserRepository;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,14 +42,18 @@ public class UserServiceImpl implements UserService{
         }
     }
 
-//    public UserNickNameResponseDto findByUserNickname(String Nickname) {
-//        try {
-//            User user = userRepository.findByNickName(Nickname)
-//                    .orElseThrow(() -> new RuntimeException("닉네임 사용이 가능합니다."));
-//
-//            return new UserNickNameResponseDto();
-//        } catch (Exception e) {
-//            throw new RuntimeException("닉네임 사용이 불가능 합니다.");
-//        }
-//    }
+    public UserNickNameResponseDto findByUserNickname(String Nickname) {
+        try {
+            Boolean exists;
+            List<User> users = userRepository.findByUserNickName(Nickname);
+            if (users.size() > 0) {
+                exists = true;
+            } else {
+                exists = false;
+            }
+            return new UserNickNameResponseDto(exists);
+        } catch (Exception e) {
+            throw new RuntimeException("닉네임 사용이 불가능 합니다.");
+        }
+    }
 }

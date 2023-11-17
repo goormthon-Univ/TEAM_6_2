@@ -25,4 +25,9 @@ public class UserController {
     public ResponseEntity<?> loginUser(@RequestBody UserLoginRequestDto userLoginRequestDto) {;
         return ResponseEntity.ok(userService.findUser(userLoginRequestDto));
     }
+
+    @GetMapping("/auth/{nickname}/exists")
+    public ResponseEntity<?> findNickname(@PathVariable String nickname) {
+        return ResponseEntity.ok(userService.findByUserNickname(nickname));
+    }
 }

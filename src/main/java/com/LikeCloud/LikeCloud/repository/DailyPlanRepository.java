@@ -23,6 +23,11 @@ public interface DailyPlanRepository extends JpaRepository<DailyPlan, Long> {
         "where d.yearPlan.id in :yearPlanIds and d.day = :day")
     List<DailyPlan> findByYearsAndDate(@Param("yearPlanIds") List<Long> yearPlanIds, @Param("day") Day day);
 
+    @Transactional
+    @Modifying
+    @Query("update DailyPlan dp set dp.done = false, exception = false")
+    void updateDoneStatus();
+
     List<DailyPlan> findByYearPlanId(Long planId);
     List<DailyPlan> findByShortPlanId(Long planId);
     void deleteByYearPlanId(Long planId);
