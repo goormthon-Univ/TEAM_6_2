@@ -97,7 +97,7 @@ public class MyPageServiceImpl implements MyPageService {
     }
 
     @Override
-    public List<DailyPlanResponseDto> getDailyPlansByPlanId(Long userId, Long planId) {
+    public List<DailyPlanResponseDto> getDailyPlansByPlanId(Long userId, String planType, Long planId) {
         // YearPlan 또는 ShortPlan 찾기
         YearPlan yearPlan = yearPlanRepository.findById(planId).orElse(null);
         ShortPlan shortPlan = shortPlanRepository.findById(planId).orElse(null);
@@ -108,12 +108,14 @@ public class MyPageServiceImpl implements MyPageService {
 
         // DailyPlans 조회
         List<DailyPlan> dailyPlans;
-        if (yearPlan != null) {
+        if (planType.equals("yearPlan")) {
             // YearPlan의 경우
             dailyPlans = dailyPlanRepository.findByYearPlanId(planId);
-        } else {
+        } else if (planType.equals("shortPlan")){
             // ShortPlan의 경우
             dailyPlans = dailyPlanRepository.findByShortPlanId(planId);
+        } else {
+            throw new RuntimeException("잘못된 planType입니다.");
         }
 
         // DailyPlan을 DTO로 변환

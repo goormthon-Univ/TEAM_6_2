@@ -71,7 +71,7 @@ public class MyPageController {
             DonePlanResponseDto donePlanResponseDto = myPageService.getDonePlans(user.getId());
             return ResponseEntity.ok(donePlanResponseDto);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("내부 서버 오류: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal sever error: " + e.getMessage());
         }
     }
 
@@ -81,15 +81,17 @@ public class MyPageController {
             User user = userRepository.findById(1L)
                     .orElseThrow(() -> new RuntimeException("해당 아이디의 유저를 찾을 수 없습니다."));
 
-            List<DailyPlanResponseDto> dailyPlans = myPageService.getDailyPlansByPlanId(user.getId(), planId);
+            if (planType.equals("yearPlan") || planType.equals("shortPlan")) {
+                List<DailyPlanResponseDto> dailyPlans = myPageService.getDailyPlansByPlanId(user.getId(), planType, planId);
+                Map<String, List<DailyPlanResponseDto>> response = new HashMap<>();
+                response.put("dailyPlans", dailyPlans);
 
-            // 결과를 객체로 한 번 더 감싸서 반환
-            Map<String, List<DailyPlanResponseDto>> response = new HashMap<>();
-            response.put("dailyPlans", dailyPlans);
-
-            return ResponseEntity.ok(response);
+                return ResponseEntity.ok(response);
+            } else  {
+                throw new RuntimeException("not good planType");
+            }
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("내부 서버 오류: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal sever error: " + e.getMessage());
         }
     }
 
@@ -104,12 +106,12 @@ public class MyPageController {
             if ("yearPlan".equals(planType) || "shortPlan".equals(planType)) {
                 myPageService.updateDailyPlansByPlanId(1L, planId, planType, requestDto);
             } else {
-                throw new RuntimeException("올바르지 않은 planType입니다.");
+                throw new RuntimeException("Not Good planType");
             }
 
-            return ResponseEntity.status(HttpStatus.OK).body("수정이 완료되었습니다.");
+            return ResponseEntity.status(HttpStatus.OK).body("Done");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("내부 서버 오류: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error: " + e.getMessage());
         }
     }
 }

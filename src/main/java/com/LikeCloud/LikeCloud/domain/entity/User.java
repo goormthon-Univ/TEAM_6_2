@@ -26,6 +26,9 @@ public class User extends BaseTimeEntity {
     @Column(columnDefinition = "MEDIUMTEXT", nullable = false)
     private String nickName;
 
+    @Column(columnDefinition = "MEDIUMTEXT", nullable = false)
+    private String password;
+
     private String profileImage;
 
     @Column(nullable = false)
