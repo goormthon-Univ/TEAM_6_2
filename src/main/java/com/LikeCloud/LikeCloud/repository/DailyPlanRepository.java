@@ -29,6 +29,7 @@ public interface DailyPlanRepository extends JpaRepository<DailyPlan, Long> {
     void updateDoneStatus();
 
     List<DailyPlan> findByYearPlanId(Long planId);
-
     List<DailyPlan> findByShortPlanId(Long planId);
+    void deleteByYearPlanId(Long planId);
+    void deleteByShortPlanId(Long planId);
 }

@@ -1,8 +1,7 @@
 package com.LikeCloud.LikeCloud.service;
 
-import com.LikeCloud.LikeCloud.dto.DailyPlanResponseDto;
-import com.LikeCloud.LikeCloud.dto.DoingPlanResponseDto;
-import com.LikeCloud.LikeCloud.dto.DonePlanResponseDto;
+import com.LikeCloud.LikeCloud.domain.type.Day;
+import com.LikeCloud.LikeCloud.dto.*;
 
 import java.util.List;
 
@@ -12,4 +11,6 @@ public interface MyPageService {
     DonePlanResponseDto getDonePlans(Long userId);
     void deletePlan(Long planId);
     List<DailyPlanResponseDto> getDailyPlansByPlanId(Long userId, Long planId);
+    void updateDailyPlansByPlanId(Long userId, Long planId, String planType, UpdateDailyPlanRequestDto updateDailyPlanRequestDto);
+    Day findDay(Integer day);
 }

@@ -1,8 +1,8 @@
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/goorm
-    username: dongnae
-    password: df1234
+    username: root
+    password: 1128
     driver-class-name: com.mysql.cj.jdbc.Driver
   sql:
     init:
