@@ -2,16 +2,14 @@ package com.LikeCloud.LikeCloud.controller;
 
 import com.LikeCloud.LikeCloud.domain.entity.DailyPlan;
 import com.LikeCloud.LikeCloud.domain.entity.User;
-import com.LikeCloud.LikeCloud.dto.DailyPlanResponseDto;
-import com.LikeCloud.LikeCloud.dto.DeletePlanRequestDto;
-import com.LikeCloud.LikeCloud.dto.DoingPlanResponseDto;
-import com.LikeCloud.LikeCloud.dto.DonePlanResponseDto;
+import com.LikeCloud.LikeCloud.dto.*;
 import com.LikeCloud.LikeCloud.repository.UserRepository;
 import com.LikeCloud.LikeCloud.service.MyPageService;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.sql.Delete;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -90,6 +88,26 @@ public class MyPageController {
             response.put("dailyPlans", dailyPlans);
 
             return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("내부 서버 오류: " + e.getMessage());
+        }
+    }
+
+    @PutMapping("/DailyPlan/{planType}/{planId}")
+    public ResponseEntity<?> updateDailyPlan(@PathVariable String planType, @PathVariable Long planId,
+                                             @RequestBody UpdateDailyPlanRequestDto requestDto) {
+        try {
+            User user = userRepository.findById(1L)
+                    .orElseThrow(() -> new RuntimeException("해당 아이디의 유저를 찾을 수 없습니다."));
+
+            // planType에 따라 다른 메서드 호출
+            if ("yearPlan".equals(planType) || "shortPlan".equals(planType)) {
+                myPageService.updateDailyPlansByPlanId(1L, planId, planType, requestDto);
+            } else {
+                throw new RuntimeException("올바르지 않은 planType입니다.");
+            }
+
+            return ResponseEntity.status(HttpStatus.OK).body("수정이 완료되었습니다.");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("내부 서버 오류: " + e.getMessage());
         }

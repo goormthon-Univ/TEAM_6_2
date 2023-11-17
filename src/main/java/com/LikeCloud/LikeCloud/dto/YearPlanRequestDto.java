@@ -1,5 +1,7 @@
 package com.LikeCloud.LikeCloud.dto;
 
+import com.LikeCloud.LikeCloud.domain.entity.User;
+import com.LikeCloud.LikeCloud.domain.entity.YearPlan;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,5 +27,20 @@ public class YearPlanRequestDto {
         this.halfPlan = halfPlan;
         this.monthlyPlan = monthlyPlan;
         this.dailyPlan = dailyPlan;
+    }
+
+    public YearPlan toEntity(User user, Integer year, String yearPlan, String halfPlan) {
+        return YearPlan.builder()
+                .user(user)
+                .year(year)
+                .yearPlan(yearPlan)
+                .halfPlan(halfPlan)
+                .waterDrop(0)
+                .steam(0)
+                .miniCloud(0)
+                .bigCloud(0)
+                .done(false)
+                .dailyFix(true)
+                .build();
     }
 }
