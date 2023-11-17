@@ -46,10 +46,10 @@ public class YearPlanServiceImpl implements YearPlanService {
     }
 
     @Override
-    public void save(YearPlanRequestDto yp) {
+    public void save(Integer userId, YearPlanRequestDto yp) {
         try {
             // UserRepository를 이용하여 User 정보를 불러옴
-            User user = userRepository.findById(1L)
+            User user = userRepository.findById(Long.valueOf(userId))
                     .orElseThrow(() -> new RuntimeException("User를 찾을 수 없습니다."));
 
             // Save year plans and half plan

@@ -36,17 +36,17 @@ public class MyPageServiceImpl implements MyPageService {
     DailyPlanRepository dailyPlanRepository;
 
     @Override
-    public DoingPlanResponseDto getPlans(Long userId) {
-        User user = userRepository.findById(1L)
+    public DoingPlanResponseDto getPlans(Integer userId) {
+        User user = userRepository.findById(Long.valueOf(userId))
                 .orElseThrow(() -> new RuntimeException("User를 찾을 수 없습니다."));
 
-        List<YearPlanResponseDto> yearPlans = yearPlanRepository.findByUserId(userId)
+        List<YearPlanResponseDto> yearPlans = yearPlanRepository.findByUserId(user.getId())
                 .stream()
                 .filter(yearPlan -> !yearPlan.getDone())
                 .map(YearPlanResponseDto::new)
                 .collect(Collectors.toList());
 
-        List<ShortPlanResponseDto> shortPlans = shortPlanRepository.findByUserId(userId)
+        List<ShortPlanResponseDto> shortPlans = shortPlanRepository.findByUserId(Long.valueOf(userId))
                 .stream()
                 .filter(shortPlan -> !shortPlan.getDone())
                 .map(ShortPlanResponseDto::new)
@@ -57,6 +57,7 @@ public class MyPageServiceImpl implements MyPageService {
 
     @Override
     public void deletePlan(Long planId) {
+
         // 삭제할 목표가 YearPlan인지 ShortPlan인지 확인
         Optional<YearPlan> yearPlanOptional = yearPlanRepository.findById(planId);
         if (yearPlanOptional.isPresent()) {
@@ -77,17 +78,17 @@ public class MyPageServiceImpl implements MyPageService {
     }
 
     @Override
-    public DonePlanResponseDto getDonePlans(Long userId) {
-        User user = userRepository.findById(1L)
+    public DonePlanResponseDto getDonePlans(Integer userId) {
+        User user = userRepository.findById(Long.valueOf(userId))
                 .orElseThrow(() -> new RuntimeException("User를 찾을 수 없습니다."));
 
-        List<YearPlanResponseDto> yearPlans = yearPlanRepository.findByUserId(userId)
+        List<YearPlanResponseDto> yearPlans = yearPlanRepository.findByUserId(user.getId())
                 .stream()
                 .filter(yearPlan -> yearPlan.getDone())
                 .map(YearPlanResponseDto::new)
                 .collect(Collectors.toList());
 
-        List<ShortPlanResponseDto> shortPlans = shortPlanRepository.findByUserId(userId)
+        List<ShortPlanResponseDto> shortPlans = shortPlanRepository.findByUserId(user.getId())
                 .stream()
                 .filter(shortPlan -> shortPlan.getDone())
                 .map(ShortPlanResponseDto::new)
@@ -97,7 +98,8 @@ public class MyPageServiceImpl implements MyPageService {
     }
 
     @Override
-    public List<DailyPlanResponseDto> getDailyPlansByPlanId(Long userId, String planType, Long planId) {
+    public List<DailyPlanResponseDto> getDailyPlansByPlanId(String planType, Long planId) {
+
         // YearPlan 또는 ShortPlan 찾기
         YearPlan yearPlan = yearPlanRepository.findById(planId).orElse(null);
         ShortPlan shortPlan = shortPlanRepository.findById(planId).orElse(null);
@@ -125,8 +127,8 @@ public class MyPageServiceImpl implements MyPageService {
     }
 
     @Override
-    public void updateDailyPlansByPlanId(Long userId, Long planId, String planType, UpdateDailyPlanRequestDto updateDailyPlanRequestDto) {
-        User user = userRepository.findById(1L)
+    public void updateDailyPlansByPlanId(Integer userId, Long planId, String planType, UpdateDailyPlanRequestDto updateDailyPlanRequestDto) {
+        User user = userRepository.findById(Long.valueOf(userId))
                 .orElseThrow(() -> new RuntimeException("User를 찾을 수 없습니다."));
 
         if (planType.equals("yearPlan")) {

@@ -25,13 +25,13 @@ public class MyPageController {
     private final UserRepository userRepository;
 
     @GetMapping("/DoingPlan")
-    public ResponseEntity<?> getDoingPlan() {
+    public ResponseEntity<?> getDoingPlan(@RequestHeader("userId") Integer userId) {
         try {
             // UserRepository를 사용하여 실제로 존재하는 유저를 조회
-            User user = userRepository.findById(1L)
+            User user = userRepository.findById(Long.valueOf(userId))
                     .orElseThrow(() -> new RuntimeException("해당 아이디의 유저를 찾을 수 없습니다."));
 
-            DoingPlanResponseDto responseDto = myPageService.getPlans(user.getId()); // 수정된 부분
+            DoingPlanResponseDto responseDto = myPageService.getPlans(user.getId().intValue()); // 수정된 부분
             return ResponseEntity.ok(responseDto);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("내부 서버 오류: " + e.getMessage());
@@ -39,10 +39,10 @@ public class MyPageController {
     }
 
     @DeleteMapping("/DoingPlan")
-    public ResponseEntity<?> deleteDoingPlan(@RequestBody DeletePlanRequestDto request) {
+    public ResponseEntity<?> deleteDoingPlan(@RequestHeader("userId") Integer userId, @RequestBody DeletePlanRequestDto request) {
         try {
             // UserRepository를 사용하여 실제로 존재하는 유저를 조회
-            User user = userRepository.findById(1L)
+            User user = userRepository.findById(Long.valueOf(userId))
                     .orElseThrow(() -> new RuntimeException("해당 아이디의 유저를 찾을 수 없습니다."));
 
             // 받은 요청에 따라 적절한 목표 삭제
@@ -62,13 +62,13 @@ public class MyPageController {
     }
 
     @GetMapping("/DonePlan")
-    public ResponseEntity<?> getDonePlan() {
+    public ResponseEntity<?> getDonePlan(@RequestHeader("userId") Integer userId) {
         try {
             // UserRepository를 사용하여 실제로 존재하는 유저를 조회
-            User user = userRepository.findById(1L)
+            User user = userRepository.findById(Long.valueOf(userId))
                     .orElseThrow(() -> new RuntimeException("해당 아이디의 유저를 찾을 수 없습니다."));
 
-            DonePlanResponseDto donePlanResponseDto = myPageService.getDonePlans(user.getId());
+            DonePlanResponseDto donePlanResponseDto = myPageService.getDonePlans(user.getId().intValue());
             return ResponseEntity.ok(donePlanResponseDto);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal sever error: " + e.getMessage());
@@ -78,11 +78,9 @@ public class MyPageController {
     @GetMapping("/DailyPlan/{planType}/{planId}")
     public ResponseEntity<?> getDailyPlan(@PathVariable String planType, @PathVariable Long planId) {
         try {
-            User user = userRepository.findById(1L)
-                    .orElseThrow(() -> new RuntimeException("해당 아이디의 유저를 찾을 수 없습니다."));
 
             if (planType.equals("yearPlan") || planType.equals("shortPlan")) {
-                List<DailyPlanResponseDto> dailyPlans = myPageService.getDailyPlansByPlanId(user.getId(), planType, planId);
+                List<DailyPlanResponseDto> dailyPlans = myPageService.getDailyPlansByPlanId(planType, planId);
                 Map<String, List<DailyPlanResponseDto>> response = new HashMap<>();
                 response.put("dailyPlans", dailyPlans);
 
@@ -96,15 +94,15 @@ public class MyPageController {
     }
 
     @PutMapping("/DailyPlan/{planType}/{planId}")
-    public ResponseEntity<?> updateDailyPlan(@PathVariable String planType, @PathVariable Long planId,
+    public ResponseEntity<?> updateDailyPlan(@RequestHeader("userId") Integer userId, @PathVariable String planType, @PathVariable Long planId,
                                              @RequestBody UpdateDailyPlanRequestDto requestDto) {
         try {
-            User user = userRepository.findById(1L)
+            User user = userRepository.findById(Long.valueOf(userId))
                     .orElseThrow(() -> new RuntimeException("해당 아이디의 유저를 찾을 수 없습니다."));
 
             // planType에 따라 다른 메서드 호출
             if ("yearPlan".equals(planType) || "shortPlan".equals(planType)) {
-                myPageService.updateDailyPlansByPlanId(1L, planId, planType, requestDto);
+                myPageService.updateDailyPlansByPlanId(user.getId().intValue(), planId, planType, requestDto);
             } else {
                 throw new RuntimeException("Not Good planType");
             }
