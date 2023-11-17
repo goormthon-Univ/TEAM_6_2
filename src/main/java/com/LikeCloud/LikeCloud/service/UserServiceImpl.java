@@ -4,6 +4,7 @@ import com.LikeCloud.LikeCloud.domain.entity.User;
 import com.LikeCloud.LikeCloud.dto.SignUpRequestDto;
 import com.LikeCloud.LikeCloud.dto.UserLoginRequestDto;
 import com.LikeCloud.LikeCloud.dto.UserLoginResponseDto;
+//import com.LikeCloud.LikeCloud.dto.UserNickNameResponseDto;
 import com.LikeCloud.LikeCloud.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,4 +39,15 @@ public class UserServiceImpl implements UserService{
             throw new RuntimeException("로그인에 실패했습니다");
         }
     }
+
+//    public UserNickNameResponseDto findByUserNickname(String Nickname) {
+//        try {
+//            User user = userRepository.findByNickName(Nickname)
+//                    .orElseThrow(() -> new RuntimeException("닉네임 사용이 가능합니다."));
+//
+//            return new UserNickNameResponseDto();
+//        } catch (Exception e) {
+//            throw new RuntimeException("닉네임 사용이 불가능 합니다.");
+//        }
+//    }
 }
