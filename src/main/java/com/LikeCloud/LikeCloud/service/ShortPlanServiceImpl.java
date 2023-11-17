@@ -38,11 +38,11 @@ public class ShortPlanServiceImpl implements ShortPlanService {
         return day1;
     }
     @Override
-    public void save(ShortPlanRequestDto sp) {
+    public void save(Integer userId, ShortPlanRequestDto sp) {
         try {
             // UserRepository를 이용하여 User 정보를 불러옴
-            User user = userRepository.findById(1L)
-                    .orElseThrow(() -> new RuntimeException("User를 찾을 수 없습니다."));
+            User user = userRepository.findById(Long.valueOf(userId))
+                    .orElseThrow(() -> new RuntimeException("Not Found User"));
 
             ShortPlan shortPlan = sp.toEntity(user, sp.getYear(), sp.getShortPlan(), sp.getPeriod());
             shortPlanRepository.save(shortPlan);
