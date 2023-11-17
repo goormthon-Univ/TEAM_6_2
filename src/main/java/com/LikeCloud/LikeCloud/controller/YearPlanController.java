@@ -7,10 +7,7 @@ import com.LikeCloud.LikeCloud.service.YearPlanService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,13 +18,13 @@ public class YearPlanController {
     private final UserRepository userRepository;
 
     @PostMapping("/YearPlans")
-    public ResponseEntity<?> postYearPlan(@RequestBody YearPlanRequestDto yearPlanRequestDto) {
+    public ResponseEntity<?> postYearPlan(@RequestHeader("userId") Integer userId, @RequestBody YearPlanRequestDto yearPlanRequestDto) {
         try {
             // UserRepository를 사용하여 실제로 존재하는 유저를 조회
-            User user = userRepository.findById(1L)
+            User user = userRepository.findById(Long.valueOf(userId))
                     .orElseThrow(() -> new RuntimeException("해당 아이디의 유저를 찾을 수 없습니다."));
 
-            yearPlanService.save(yearPlanRequestDto);
+            yearPlanService.save(user.getId().intValue() ,yearPlanRequestDto);
             return ResponseEntity.status(HttpStatus.CREATED).body("Year Plan이 성공적으로 저장되었습니다!");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Year Plan 저장 중 오류 발생: " + e.getMessage());
