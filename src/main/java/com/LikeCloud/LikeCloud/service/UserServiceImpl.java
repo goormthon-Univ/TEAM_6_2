@@ -33,12 +33,12 @@ public class UserServiceImpl implements UserService{
 
     public UserLoginResponseDto findUser(UserLoginRequestDto userLoginRequestDto) {
         try {
-            User user = userRepository.findByNickName(userLoginRequestDto.getNickname())
-                    .orElseThrow(() -> new RuntimeException("닉네임이 존재하지 않습니다."));
+            User user = userRepository.findByNickNameAndPassword(userLoginRequestDto.getNickname(), userLoginRequestDto.getPassword())
+                    .orElseThrow(() -> new RuntimeException("닉네임이나 비밀번호가 올바르지 않습니다."));
 
             return new UserLoginResponseDto(Long.valueOf(user.getId()).intValue());
         } catch (Exception e) {
-            throw new RuntimeException("로그인에 실패했습니다");
+            throw new RuntimeException(e.getMessage());
         }
     }
 

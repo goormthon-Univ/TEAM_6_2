@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:mysql://goorm-db.ch0tdwjy4tz5.ap-northeast-2.rds.amazonaws.com:3306/goorm?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-    username: admin
-    password: sju093475#
+    url: jdbc:mysql://localhost:3306/goorm
+    username: root
+    password: 1128
     driver-class-name: com.mysql.cj.jdbc.Driver
   sql:
     init:
