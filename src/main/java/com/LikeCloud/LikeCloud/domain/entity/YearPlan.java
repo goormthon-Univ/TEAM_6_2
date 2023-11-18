@@ -98,6 +98,11 @@ public class YearPlan extends BaseTimeEntity {
         this.bigCloud = clouds[3];
     }
 
+    public void updateMiniAndWaterDrop(Integer waterDrop, Integer miniCloud) {
+        this.waterDrop = waterDrop;
+        this.miniCloud = miniCloud;
+    }
+
     public void updateDone() {
         this.done = true;
     }
