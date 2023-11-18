@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder.In;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.annotation.Transactional;
@@ -146,31 +147,43 @@ public class MainService {
     public MainResDto.waterDropRes cancelDailyDone(CancelDailyDoneReq cancelDailyDoneReq, Integer exception) {
         if (cancelDailyDoneReq.getYear_plan_id() != null) {
             YearPlan yearPlan = findYearPlan(Long.valueOf(cancelDailyDoneReq.getYear_plan_id()));
+            // 1년 목표의 물방울, 수증기, 구름 개수
+            Integer waterDrop = yearPlan.getWaterDrop();
+            Integer steam = yearPlan.getSteam();
 //            if (yearPlan.getSteam() != 0 || yearPlan.getMiniCloud() != 0 || yearPlan.getBigCloud() != 0) {
 //                throw new RuntimeException("수증기 또는 구름이 생겼을 때는 목표 취소가 불가합니다");
 //            }
             DailyPlan dailyPlan = yearPlan.getDailyPlans().stream()
                 .filter(a -> a.getDay() == dayList.get(day-1) && a.getYearPlan() == yearPlan).findAny().get();
-            dailyPlan.updateException(exception);
-            if (yearPlan.getSteam() > 0 && yearPlan.getWaterDrop() == 0) {
-                yearPlan.updateMiniAndWaterDrop(6, yearPlan.getSteam()-1);
+
+            if (steam > 0 && waterDrop == 0) {
+                dailyPlan.updateException(exception);
+                yearPlan.updateSteamAndWaterDrop(6, steam-1);
             } else {
-                yearPlanRepository.updateWaterDrop(yearPlan.getId());
+                dailyPlan.updateException(exception);
+//                yearPlanRepository.updateWaterDr                dailyPlan.updateException(exception);op(yearPlan.getId());
+                yearPlan.updateSteamAndWaterDrop(waterDrop-1, steam);
             }
             return new MainResDto.waterDropRes(findYearPlan(Long.valueOf(cancelDailyDoneReq.getYear_plan_id())).getWaterDrop());
 
         } else if(cancelDailyDoneReq.getShort_plan_id() != null) {
             ShortPlan shortPlan = findShortPlan(Long.valueOf(cancelDailyDoneReq.getShort_plan_id()));
+            // 단기 목표의 물방울, 수증기, 구름 개수
+            Integer waterDrop = shortPlan.getWaterDrop();
+            Integer steam = shortPlan.getSteam();
 //            if (shortPlan.getSteam() != 0 || shortPlan.getMiniCloud() != 0) {
 //                throw new RuntimeException("수증기 또는 구름이 생겼을 때는 목표 취소가 불가합니다");
 //            }
             DailyPlan dailyPlan = shortPlan.getDailyPlans().stream()
                 .filter(a -> a.getDay() == dayList.get(day-1) && a.getShortPlan() == shortPlan).findAny().get();
-            dailyPlan.updateException(exception);
-            if (shortPlan.getSteam() > 0 && shortPlan.getWaterDrop() == 0) {
-                shortPlan.updateMiniAndWaterDrop(6, shortPlan.getSteam()-1);
+
+            if (steam > 0 && waterDrop == 0) {
+                dailyPlan.updateException(exception);
+                shortPlan.updateSteamAndWaterDrop(6, steam-1);
             } else {
-                shortPlanRepository.updateWaterDrop(shortPlan.getId());
+                dailyPlan.updateException(exception);
+//                shortPlanRepository.updateWaterDrop(shortPlan.getId());
+                shortPlan.updateSteamAndWaterDrop(waterDrop-1, steam);
             }
             return new MainResDto.waterDropRes(findShortPlan(Long.valueOf(cancelDailyDoneReq.getShort_plan_id())).getWaterDrop());
         }

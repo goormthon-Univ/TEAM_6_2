@@ -71,9 +71,9 @@ public class ShortPlan extends BaseTimeEntity {
         this.miniCloud = clouds[2];
     }
 
-    public void updateMiniAndWaterDrop(Integer waterDrop, Integer miniCloud) {
+    public void updateSteamAndWaterDrop(Integer waterDrop, Integer steam) {
         this.waterDrop = waterDrop;
-        this.miniCloud = miniCloud;
+        this.steam = steam;
     }
 
     public void updateDone() {
