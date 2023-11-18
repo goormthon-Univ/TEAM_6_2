@@ -14,7 +14,7 @@ public interface ShortPlanRepository extends JpaRepository<ShortPlan, Long> {
     List<ShortPlan> findByUserId(Long UserId);
 
     @Transactional
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Query("update ShortPlan sp set sp.waterDrop = sp.waterDrop - 1 " +
         "where sp.id = :shortPlanId")
     void updateWaterDrop(@Param("shortPlanId") Long shortPlanId);

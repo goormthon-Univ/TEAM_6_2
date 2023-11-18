@@ -15,7 +15,7 @@ public interface YearPlanRepository extends JpaRepository<YearPlan, Long> {
     List<YearPlan> findByUserId(Long userId);
 
     @Transactional
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Query("update YearPlan yp set yp.waterDrop = yp.waterDrop - 1 " +
             "where yp.id = :yearPlanId")
     void updateWaterDrop(@Param("yearPlanId") Long yearPlanId);
