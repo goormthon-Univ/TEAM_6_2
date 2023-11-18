@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
-    Optional<User> findByNickName(String nickname);
+    Optional<User> findByNickNameAndPassword(String nickname, String password다);
     @Query("select u from User u where u.nickName = :nickName")
     List<User> findByUserNickName(@Param("nickName") String nickname);
 }
